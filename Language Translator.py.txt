@@ -1,0 +1,37 @@
+from ibm_watson import LanguageTranslatorV3
+
+url_lt='https://api.eu-gb.language-translator.watson.cloud.ibm.com/instances/48d49df0-8ddc-4233-8b79-d5fe586760e6'
+
+apikey_lt='846fRd4_bBJmuHmK7pzcSvc08WQg1LakmMAqY0RY07Wh'
+
+version_lt='2018-05-01'
+
+authenticator = IAMAuthenticator(apikey_lt)
+language_translator = LanguageTranslatorV3(version=version_lt,authenticator=authenticator)
+language_translator.set_service_url(url_lt)
+language_translator
+
+from pandas.io.json import json_normalize
+json_normalize(language_translator.list_identifiable_languages().get_result(), "languages")
+
+#We can use the method translate this will translate the text. The parameter text is the text. Model_id is the type of #model we would like to use use we use list the the langwich . In this case, we set it to 'en-es' or English to Spanish. #We get a Detailed Response object translation_response
+
+translation_response = language_translator.translate(\
+    text=recognized_text, model_id='en-es')
+translation_response
+
+translation=translation_response.get_result()
+translation
+
+spanish_translation =translation['translations'][0]['translation']
+spanish_translation 
+
+translation_new = language_translator.translate(text=spanish_translation ,model_id='es-en').get_result()
+
+translation_eng=translation_new['translations'][0]['translation']
+translation_eng
+
+French_translation=language_translator.translate(
+    text=translation_eng , model_id='en-fr').get_result()
+
+French_translation['translations'][0]['translation']

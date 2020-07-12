@@ -1,0 +1,36 @@
+#you will need the following library 
+!pip install ibm_watson wget
+
+from ibm_watson import SpeechToTextV1 
+import json
+from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
+
+url_s2t = "https://api.eu-gb.speech-to-text.watson.cloud.ibm.com/instances/ed114f51-86c5-4e0a-ad6c-af28995b283b"
+
+iam_apikey_s2t = "4d5hpNR2AXU1vu80Nu9e_eYNg-drAuvHor0tViuWHdFa"
+
+#wget retrieves content from web server.
+!wget -O PolynomialRegressionandPipelines.mp3  https://s3-api.us-geo.objectstorage.softlayer.net/cf-courses-data/CognitiveClass/PY0101EN/labs/PolynomialRegressionandPipelines.mp3
+
+#We have the path of the wav file we would like to convert to text
+filename='PolynomialRegressionandPipelines.mp3'
+
+#We create the file object wav with the wav file using open ; we set the mode to "rb" , this is similar to read mode, but #it ensures the file is in binary mode.We use the method recognize to return the recognized text. The parameter audio is #the file object wav, the parameter content_type is the format of the audio file.
+
+with open(filename, mode="rb")  as wav:
+    response = s2t.recognize(audio=wav, content_type='audio/mp3')
+
+#The attribute result contains a dictionary that includes the translation:
+response.result
+
+from pandas.io.json import json_normalize
+json_normalize(response.result['results'],"alternatives")
+
+response
+
+#recognized_text=response.result['results'][0]["alternatives"][0]["transcript"] --> 1st line of the result
+#recognized_text=response.result['results'][1]["alternatives"][0]["transcript"] --> 2nd line of the result
+recognized_text=response.result['results'][2]["alternatives"][0]["transcript"]
+type(recognized_text)
+recognized_text
+
